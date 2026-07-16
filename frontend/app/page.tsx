@@ -17,7 +17,7 @@ const roomCategories = [
   { key: "minimal", title: "Minimal Banyo", images: buildRoomImages("minimal-banyo", 7) },
 ];
 
-// Gerçek duvar karosu doku fotoğrafları (Angel, Crystal, Artemis)
+// Gerçek duvar/zemin karosu doku fotoğrafları
 const tileImages: Record<string, string> = {
   "Gri": "/tiles/angel-gri.jpg",
   "Açık Gri": "/tiles/angel-acik-gri.jpg",
@@ -38,7 +38,6 @@ const tileImages: Record<string, string> = {
   "Artemis Beyaz": "/tiles/artemis-beyaz.jpg",
   "Artemis Rölyef Beyaz": "/tiles/artemis-rolyef-beyaz.jpg",
   "Artemis Beyaz Sugar": "/tiles/artemis-beyaz-sugar.jpg",
-  // Zemin karosu — Bali, Etna, Zeus
   "Bali Gri": "/tiles/bali-gri.jpg",
   "Bali Kemik": "/tiles/bali-kemik.jpg",
   "Bali Beyaz": "/tiles/bali-beyaz.jpg",
@@ -53,12 +52,75 @@ const tileImages: Record<string, string> = {
   "Zeus Hexagonel Silver Motif": "/tiles/zeus-hexagonel-silver-motif.jpg",
   "Zeus Bordür Koyu Gri Motif": "/tiles/zeus-bordur-koyu-gri-motif.jpg",
   "Zeus Bordür Silver Motif": "/tiles/zeus-bordur-silver-motif.jpg",
+  // Vitrifiye — Klozet
+  "Alttan Çikiş": "/tiles/natura-alttan-cikis.jpg",
+  "Alttan Çikiş Kutulu": "/tiles/natura-alttan-cikis-kutulu.jpg",
+  "Alttan Çikiş Taharet Deliksiz": "/tiles/natura-alttan-cikis-taharet-deliksiz.jpg",
+  "Arkadan Çikiş": "/tiles/natura-arkadan-cikis.jpg",
+  "Arkadan Çikiş Kutulu": "/tiles/natura-arkadan-cikis-kutulu.jpg",
+  "Arkadan Çikiş Taharet Deliksiz": "/tiles/natura-arkadan-cikis-taharet-deliksiz.jpg",
+  "Bedensel Engelli Klozet": "/tiles/natura-bedensel-engelli-klozet.jpg",
+  "Bedensel Engelli Klozet Taharet Deliksiz": "/tiles/natura-bedensel-engelli-klozet-taharet-deliksiz.jpg",
+  "Plus Asma Klozet": "/tiles/natura-plus-asma-klozet.jpg",
+  "Plus Asma Klozet Taharet Deliksiz": "/tiles/natura-plus-asma-klozet-taharet-deliksiz.jpg",
+  "Asma Klozet": "/tiles/terra-asma-klozet.jpg",
+  "Asma Klozet Taharet Deliksiz": "/tiles/terra-asma-klozet-taharet-deliksiz.jpg",
+  "DTD Klozet": "/tiles/terra-dtd-klozet.jpg",
+  "DTD Klozet Antrasit": "/tiles/terra-dtd-klozet-antrasit.jpg",
+  "DTD Klozet Antrasit Taharet Deliksiz": "/tiles/terra-dtd-klozet-antrasit-taharet-deliksiz.jpg",
+  "DTD Klozet Taharet Deliksiz": "/tiles/terra-dtd-klozet-taharet-deliksiz.jpg",
+  "Plus Rim-Out Asma Klozet": "/tiles/terra-plus-rim-out-asma-klozet.jpg",
+  "Plus Rim-Out Asma Klozet Taharet Deliksiz": "/tiles/terra-plus-rim-out-asma-klozet-taharet-deliksiz.jpg",
+  "Yerden Tek Parça Klozet": "/tiles/terra-yerden-tek-parca-klozet.jpg",
+  "Yerden Tek Parça Klozet Taharet Deliksiz": "/tiles/terra-yerden-tek-parca-klozet-taharet-deliksiz.jpg",
+  "DTD Klozet Batarya Deliksiz": "/tiles/volcano-dtd-klozet-batarya-deliksiz.jpg",
+  "Rim-Out Asma Klozet": "/tiles/volcano-rim-out-asma-klozet.jpg",
+  "Tek Parça Klozet": "/tiles/volcano-tek-parca-klozet.jpg",
+  "Tek Parça Klozet Batarya Delikli": "/tiles/volcano-tek-parca-klozet-batarya-delikli.jpg",
+  // Vitrifiye — Lavabo
+  "Bedensel Engelli Lavabosu": "/tiles/natura-bedensel-engelli-lavabosu.jpg",
+  "Lavabo 50 cm": "/tiles/natura-lavabo-50cm.jpg",
+  "Lavabo 50 cm Kutulu": "/tiles/natura-lavabo-50cm-kutulu.jpg",
+  "Tam Ayak Kutusuz": "/tiles/natura-tam-ayak-kutusuz.jpg",
+  "Yarım Ayak Kutusuz": "/tiles/natura-yarim-ayak-kutusuz.jpg",
+  "Etajerli Lavabo 60 cm": "/tiles/saturn-etajerli-lavabo-60cm.jpg",
+  "Etajerli Lavabo 80 cm": "/tiles/saturn-etajerli-lavabo-80cm.jpg",
+  "Etajerli Lavabo 100 cm": "/tiles/saturn-etajerli-lavabo-100cm.jpg",
+  "Flat Lavabo 100 cm Mobilya Geçmeli": "/tiles/saturn-flat-lavabo-100cm-mobilya-gecmeli.jpg",
+  "Flat Lavabo 60 cm Mobilya Geçmeli": "/tiles/saturn-flat-lavabo-60cm-mobilya-gecmeli.jpg",
+  "Flat Lavabo 80 cm Mobilya Geçmeli": "/tiles/saturn-flat-lavabo-80cm-mobilya-gecmeli.jpg",
+  "Flat Mat Antrasit Lavabo 100 cm": "/tiles/saturn-flat-mat-antrasit-lavabo-100cm.jpg",
+  "Flat Mat Beyaz Lavabo 100 cm": "/tiles/saturn-flat-mat-beyaz-lavabo-100cm.jpg",
+  "Flat Mat Beyaz Lavabo 60 cm": "/tiles/saturn-flat-mat-beyaz-lavabo-60cm.jpg",
+  "Flat Mat Beyaz Lavabo 80 cm": "/tiles/saturn-flat-mat-beyaz-lavabo-80cm.jpg",
+  "Mat Antrasit Etajerli Lavabo 100 cm": "/tiles/saturn-mat-antrasit-etajerli-lavabo-100cm.jpg",
+  "Mat Antrasit Etajerli Lavabo 60 cm": "/tiles/saturn-mat-antrasit-etajerli-lavabo-60cm.jpg",
+  "Mat Antrasit Etajerli Lavabo 80 cm": "/tiles/saturn-mat-antrasit-etajerli-lavabo-80cm.jpg",
+  "Mat Beyaz Etajerli Lavabo 100 cm Mobilya Geçmeli": "/tiles/saturn-mat-beyaz-etajerli-lavabo-100cm-mobilya-gecmeli.jpg",
+  "Mat Beyaz Etajerli Lavabo 60 cm Mobilya Geçmeli": "/tiles/saturn-mat-beyaz-etajerli-lavabo-60cm-mobilya-gecmeli.jpg",
+  "Mat Beyaz Etajerli Lavabo 80 cm Mobilya Geçmeli": "/tiles/saturn-mat-beyaz-etajerli-lavabo-80cm-mobilya-gecmeli.jpg",
+  "Mat Beyaz Flat Lavabo 100 cm Mobilya Geçmeli": "/tiles/saturn-mat-beyaz-flat-lavabo-100cm-mobilya-gecmeli.jpg",
+  "Mat Beyaz Flat Lavabo 60 cm Mobilya Geçmeli": "/tiles/saturn-mat-beyaz-flat-lavabo-60cm-mobilya-gecmeli.jpg",
+  "Mat Beyaz Flat Lavabo 80 cm Mobilya Geçmeli": "/tiles/saturn-mat-beyaz-flat-lavabo-80cm-mobilya-gecmeli.jpg",
+  "Antrasit Tezgah Üstü Lavabo": "/tiles/form-antrasit-tezgah-ustu-lavabo.jpg",
+  "Antrasit Tezgah Üstü Lavabo Batarya Delikli": "/tiles/form-antrasit-tezgah-ustu-lavabo-batarya-delikli.jpg",
+  "Beyaz Tezgah Üstü Lavabo": "/tiles/form-beyaz-tezgah-ustu-lavabo.jpg",
+  "Beyaz Tezgah Üstü Lavabo Batarya Delikli": "/tiles/form-beyaz-tezgah-ustu-lavabo-batarya-delikli.jpg",
+  "Mat Beyaz Tezgah Üstü Lavabo": "/tiles/form-mat-beyaz-tezgah-ustu-lavabo.jpg",
+  "Mat Beyaz Tezgah Üstü Lavabo Batarya Delikli": "/tiles/form-mat-beyaz-tezgah-ustu-lavabo-batarya-delikli.jpg",
+  "Mat Cappuccino Tezgah Üstü Lavabo": "/tiles/form-mat-cappuccino-tezgah-ustu-lavabo.jpg",
+  "Mat Cappuccino Tezgah Üstü Lavabo Batarya Delikli": "/tiles/form-mat-cappuccino-tezgah-ustu-lavabo-batarya-delikli.jpg",
+  "Mat Siyah Tezgah Üstü Lavabo": "/tiles/form-mat-siyah-tezgah-ustu-lavabo.jpg",
+  "Mat Siyah Tezgah Üstü Lavabo Batarya Delikli": "/tiles/form-mat-siyah-tezgah-ustu-lavabo-batarya-delikli.jpg",
+  "Parlak Koyu Turuncu Tezgah Üstü Lavabo": "/tiles/form-parlak-koyu-turuncu-tezgah-ustu-lavabo.jpg",
+  "Parlak Koyu Turuncu Tezgah Üstü Lavabo Batarya Delikli": "/tiles/form-parlak-koyu-turuncu-tezgah-ustu-lavabo-batarya-delikli.jpg",
 };
 
 function imageFor(variant: string): string | null {
   return tileImages[variant] ?? null;
 }
-// Gerçek doku fotoğrafları gelene kadar renk/varyant isimlerini geçici bir renge eşliyoruz
+
+// Gerçek fotoğrafı henüz olmayan ürünler için geçici renk (fallback)
 const placeholderColors: Record<string, string> = {
   "Bali Gri": "#9CA3AF",
   "Bali Kemik": "#D8CBB4",
@@ -93,10 +155,6 @@ const placeholderColors: Record<string, string> = {
   "Artemis Beyaz": "#F1F0EE",
   "Artemis Rölyef Beyaz": "#F1F0EE",
   "Artemis Beyaz Sugar": "#F1F0EE",
-  "Terra": "#B08B6A",
-  "Volcano": "#4B4B4E",
-  "Saturn": "#C7C7C9",
-  "Form": "#D9D9D9",
 };
 
 function colorFor(variant: string): string {
@@ -106,13 +164,14 @@ function colorFor(variant: string): string {
 type Series = { name: string; variants: string[] };
 type Category = { key: string; title: string; seriesList: Series[] };
 
+// Duvar Karoları — Angel, Crystal, Artemis (gerçek renkler, gerçek fotoğraflar)
 const wallTileSeries: Series[] = [
   {
     name: "Angel",
     variants: [
-      "Gri", "Açık Gri", "Kemik", "Vizon",
-      "Rölyef Açık Gri", "Rölyef Kemik",
-      "Gri Sugar", "Açık Gri Sugar", "Kemik Sugar", "Vizon Sugar",
+      "Gri", "Açik Gri", "Kemik", "Vizon",
+      "Rölyef Açik Gri", "Rölyef Kemik",
+      "Gri Sugar", "Açik Gri Sugar", "Kemik Sugar", "Vizon Sugar",
     ],
   },
   {
@@ -126,6 +185,7 @@ const wallTileSeries: Series[] = [
   { name: "Artemis", variants: ["Artemis Beyaz", "Artemis Rölyef Beyaz", "Artemis Beyaz Sugar"] },
 ];
 
+// Zemin Karoları — Bali, Etna, Zeus (gerçek renkler, gerçek fotoğraflar)
 const floorTileSeries: Series[] = [
   { name: "Bali", variants: ["Bali Gri", "Bali Kemik", "Bali Beyaz", "Bali Leaf Motif", "Bali Rölyef"] },
   { name: "Etna", variants: ["Etna Kemik Sugar", "Etna Gri Sugar", "Etna Antrasit Sugar"] },
@@ -139,27 +199,104 @@ const floorTileSeries: Series[] = [
   },
 ];
 
+// Vitrifiye — Klozet — Natura, Terra, Volcano (seramiksan.com.tr'den gerçek ürün adları)
 const klozetSeries: Series[] = [
   {
     name: "Natura",
     variants: [
-      "BTW Klozet S Trap",
-      "BTW Klozet S Trap Bidet Fonksiyonlu",
-      "BTW Klozet P Trap Bidet Fonksiyonlu",
-      "Asma Klozet (Natura Plus)",
-      "Engelli BTW Klozet Bidet Fonksiyonlu",
+      "Alttan Çikiş",
+      "Alttan Çikiş Kutulu",
+      "Alttan Çikiş Taharet Deliksiz",
+      "Arkadan Çikiş",
+      "Arkadan Çikiş Kutulu",
+      "Arkadan Çikiş Taharet Deliksiz",
+      "Bedensel Engelli Klozet",
+      "Bedensel Engelli Klozet Taharet Deliksiz",
+      "Plus Asma Klozet",
+      "Plus Asma Klozet Taharet Deliksiz",
     ],
   },
-  { name: "Terra", variants: ["Terra"] },
-  { name: "Volcano", variants: ["Volcano"] },
+  {
+    name: "Terra",
+    variants: [
+      "Asma Klozet",
+      "Asma Klozet Taharet Deliksiz",
+      "DTD Klozet",
+      "DTD Klozet Antrasit",
+      "DTD Klozet Antrasit Taharet Deliksiz",
+      "DTD Klozet Taharet Deliksiz",
+      "Plus Rim-Out Asma Klozet",
+      "Plus Rim-Out Asma Klozet Taharet Deliksiz",
+      "Yerden Tek Parça Klozet",
+      "Yerden Tek Parça Klozet Taharet Deliksiz",
+    ],
+  },
+  {
+    name: "Volcano",
+    variants: [
+      "DTD Klozet",
+      "DTD Klozet Batarya Deliksiz",
+      "Rim-Out Asma Klozet",
+      "Tek Parça Klozet",
+      "Tek Parça Klozet Batarya Delikli",
+    ],
+  },
 ];
 
+// Vitrifiye — El Yıkama (Lavabo) — henüz gerçek veri eklenmedi (yer tutucu)
 const lavaboSeries: Series[] = [
-  { name: "Natura", variants: ["Lavabo 50 cm", "Ayaklı Lavabo (Pedestal)", "Yarım Ayaklı Lavabo"] },
-  { name: "Saturn", variants: ["Saturn"] },
-  { name: "Form", variants: ["Form"] },
+  {
+    name: "Natura",
+    variants: [
+      "Bedensel Engelli Lavabosu",
+      "Lavabo 50 cm",
+      "Lavabo 50 cm Kutulu",
+      "Tam Ayak Kutusuz",
+      "Yarim Ayak Kutusuz",
+    ],
+  },
+  {
+    name: "Saturn",
+    variants: [
+      "Etajerli Lavabo 60 cm",
+      "Etajerli Lavabo 80 cm",
+      "Etajerli Lavabo 100 cm",
+      "Flat Lavabo 100 cm Mobilya Geçmeli",
+      "Flat Lavabo 60 cm Mobilya Geçmeli",
+      "Flat Lavabo 80 cm Mobilya Geçmeli",
+      "Flat Mat Antrasit Lavabo 100 cm",
+      "Flat Mat Beyaz Lavabo 100 cm",
+      "Flat Mat Beyaz Lavabo 60 cm",
+      "Flat Mat Beyaz Lavabo 80 cm",
+      "Mat Antrasit Etajerli Lavabo 100 cm",
+      "Mat Antrasit Etajerli Lavabo 60 cm",
+      "Mat Antrasit Etajerli Lavabo 80 cm",
+      "Mat Beyaz Etajerli Lavabo 100 cm Mobilya Geçmeli",
+      "Mat Beyaz Etajerli Lavabo 60 cm Mobilya Geçmeli",
+      "Mat Beyaz Etajerli Lavabo 80 cm Mobilya Geçmeli",
+      "Mat Beyaz Flat Lavabo 100 cm Mobilya Geçmeli",
+      "Mat Beyaz Flat Lavabo 60 cm Mobilya Geçmeli",
+      "Mat Beyaz Flat Lavabo 80 cm Mobilya Geçmeli",
+    ],
+  },
+  {
+    name: "Form",
+    variants: [
+      "Antrasit Tezgah Üstü Lavabo",
+      "Antrasit Tezgah Üstü Lavabo Batarya Delikli",
+      "Beyaz Tezgah Üstü Lavabo",
+      "Beyaz Tezgah Üstü Lavabo Batarya Delikli",
+      "Mat Beyaz Tezgah Üstü Lavabo",
+      "Mat Beyaz Tezgah Üstü Lavabo Batarya Delikli",
+      "Mat Cappuccino Tezgah Üstü Lavabo",
+      "Mat Cappuccino Tezgah Üstü Lavabo Batarya Delikli",
+      "Mat Siyah Tezgah Üstü Lavabo",
+      "Mat Siyah Tezgah Üstü Lavabo Batarya Delikli",
+      "Parlak Koyu Turuncu Tezgah Üstü Lavabo",
+      "Parlak Koyu Turuncu Tezgah Üstü Lavabo Batarya Delikli",
+    ],
+  },
 ];
-
 const productCategories: Category[] = [
   { key: "wall", title: "Duvar Karosu", seriesList: wallTileSeries },
   { key: "floor", title: "Zemin Karosu", seriesList: floorTileSeries },
@@ -236,7 +373,6 @@ export default function Home() {
     );
   };
 
-  // Fotoğrafın yanında gösterilecek ürün kartı
   const ProductSwatchCard = ({
     label,
     series,
@@ -268,7 +404,7 @@ export default function Home() {
       <h1 className="text-2xl font-bold mb-6">Seramiksan Bayi Ürün Deneme Platformu</h1>
 
       <div className="flex gap-6">
-        {/* SOL: Banyo sahnesi seçimi + fotoğraf + yanında ürün kartları */}
+        {/* SOL: Banyo sahnesi seçimi + gerçek görsel önizleme */}
         <div className="flex-1">
           <h2 className="text-lg mb-4">Banyo Sahnesi Seç</h2>
 
@@ -312,7 +448,6 @@ export default function Home() {
 
           {/* Fotoğraf + yanında ürün kartları (yan yana) */}
           <div className="flex gap-4">
-            {/* Banyo fotoğrafı */}
             <div
               className="relative flex-1 rounded-lg overflow-hidden border border-neutral-700 bg-neutral-800"
               style={{ aspectRatio: "3 / 2" }}
@@ -324,7 +459,6 @@ export default function Home() {
               />
             </div>
 
-            {/* Sağında dikey ürün kartları sütunu */}
             <div className="w-64 shrink-0 flex flex-col gap-3">
               <ProductSwatchCard
                 label="Duvar Karosu"
@@ -349,7 +483,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Seçim özeti — ayrı bir tablo olarak altında */}
+          {/* Seçim özeti — ayrı bir tablo olarak önizlemenin altında */}
           <div className="w-full mt-4 rounded-lg border border-neutral-700 overflow-hidden">
             <table className="w-full text-sm">
               <thead>
