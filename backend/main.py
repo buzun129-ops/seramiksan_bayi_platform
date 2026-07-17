@@ -1,0 +1,52 @@
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from database import database, bayiler_collection
+from models import BayiCreate, BayiLogin, BayiOut
+from auth import sifre_hashle, sifre_dogrula, token_olustur
+
+app = FastAPI(title="Seramiksan Bayi Platformu API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+def read_root():
+    return {"mesaj": "Seramiksan Bayi Platformu API çalışıyor"}
+
+@app.get("/veritabani-testi")
+async def veritabani_testi():
+    try:
+        await database.command("ping")
+        return {"durum": "başarılı", "mesaj": "MongoDB bağlantısı çalışıyor"}
+    except Exception as e:
+        return {"durum": "hata", "mesaj": str(e)}
+
+@app.post("/register", response_model=BayiOut)
+async def register(bayi: BayiCreate):
+    mevcut = await bayiler_collection.find_one({"email": bayi.email})
+    if mevcut:
+        raise HTTPException(status_code=400, detail="Bu e-posta ile kayıtlı bir bayi zaten var.")
+
+    yeni_bayi = {
+        "email": bayi.email,
+        "sifre_hash": sifre_hashle(bayi.sifre),
+        "bayi_adi": bayi.bayi_adi,
+        "sehir": bayi.sehir,
+        "rol": "bayi",
+    }
+    await bayiler_collection.insert_one(yeni_bayi)
+    return BayiOut(email=bayi.email, bayi_adi=bayi.bayi_adi, sehir=bayi.sehir, rol="bayi")
+
+@app.post("/login")
+async def login(bilgiler: BayiLogin):
+    bayi = await bayiler_collection.find_one({"email": bilgiler.email})
+    if not bayi or not sifre_dogrula(bilgiler.sifre, bayi["sifre_hash"]):
+        raise HTTPException(status_code=401, detail="E-posta veya şifre hatalı.")
+
+    token = token_olustur({"sub": bayi["email"], "rol": bayi["rol"]})
+    return {"access_token": token, "token_type": "bearer"}
