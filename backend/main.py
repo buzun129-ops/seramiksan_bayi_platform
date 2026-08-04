@@ -1,10 +1,11 @@
 import os
+from datetime import datetime
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from jose import jwt, JWTError
-from database import database, bayiler_collection
-from models import BayiCreate, BayiLogin, BayiOut
+from database import database, bayiler_collection, kullanim_kayitlari_collection
+from models import BayiCreate, BayiLogin, BayiOut, KullanimKaydiCreate
 from auth import sifre_hashle, sifre_dogrula, token_olustur, SECRET_KEY, ALGORITHM
 
 app = FastAPI(title="Seramiksan Bayi Platformu API")
@@ -80,3 +81,19 @@ async def me(su_anki_bayi: dict = Depends(su_anki_bayiyi_getir)):
         sehir=su_anki_bayi.get("sehir"),
         rol=su_anki_bayi["rol"],
     )
+
+@app.post("/kullanim-kaydi")
+async def kullanim_kaydi_ekle(
+    kayit: KullanimKaydiCreate,
+    su_anki_bayi: dict = Depends(su_anki_bayiyi_getir),
+):
+    yeni_kayit = {
+        "bayi_email": su_anki_bayi["email"],
+        "bayi_adi": su_anki_bayi["bayi_adi"],
+        "kategori": kayit.kategori,
+        "seri": kayit.seri,
+        "varyant": kayit.varyant,
+        "tarih": datetime.utcnow(),
+    }
+    await kullanim_kayitlari_collection.insert_one(yeni_kayit)
+    return {"durum": "kaydedildi"}

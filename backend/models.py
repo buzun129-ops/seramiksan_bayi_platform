@@ -16,3 +16,8 @@ class BayiOut(BaseModel):
     bayi_adi: str
     sehir: Optional[str] = None
     rol: str = "bayi"
+
+class KullanimKaydiCreate(BaseModel):
+    kategori: str
+    seri: str
+    varyant: str

@@ -18,7 +18,6 @@ const roomCategories = [
   { key: "minimal", title: "Minimal Banyo", images: buildRoomImages("minimal-banyo", 7) },
 ];
 
-// Gerçek duvar/zemin karosu doku fotoğrafları
 const tileImages: Record<string, string> = {
   "Gri": "/tiles/angel-gri.jpg",
   "Açık Gri": "/tiles/angel-acik-gri.jpg",
@@ -119,7 +118,6 @@ function imageFor(variant: string): string | null {
   return tileImages[variant] ?? null;
 }
 
-// Gerçek fotoğrafı henüz olmayan ürünler için geçici renk (fallback)
 const placeholderColors: Record<string, string> = {
   "Bali Gri": "#9CA3AF",
   "Bali Kemik": "#D8CBB4",
@@ -346,6 +344,24 @@ export default function Home() {
     router.push("/giris");
   };
 
+  const kullanimKaydet = async (kategori: string, seri: string, varyant: string) => {
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
+
+    try {
+      await fetch("http://127.0.0.1:8000/kullanim-kaydi", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ kategori, seri, varyant }),
+      });
+    } catch {
+      // Kayıt başarısız olsa bile kullanıcı deneyimini bozmasın diye sessizce geçiyoruz
+    }
+  };
+
   const [openRoomCategories, setOpenRoomCategories] = useState<Record<string, boolean>>({});
   const [selectedRoomImage, setSelectedRoomImage] = useState<string>(roomCategories[0].images[0]);
   const [selectedRoomTitle, setSelectedRoomTitle] = useState<string>(roomCategories[0].title);
@@ -454,7 +470,6 @@ export default function Home() {
       </div>
 
       <div className="flex gap-6">
-        {/* SOL: Banyo sahnesi seçimi + gerçek görsel önizleme */}
         <div className="flex-1">
           <h2 className="text-lg mb-4">Banyo Sahnesi Seç</h2>
 
@@ -496,7 +511,6 @@ export default function Home() {
             })}
           </div>
 
-          {/* Fotoğraf + yanında ürün kartları (yan yana) */}
           <div className="flex gap-4">
             <div
               className="relative flex-1 rounded-lg overflow-hidden border border-neutral-700 bg-neutral-800"
@@ -533,7 +547,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Seçim özeti — ayrı bir tablo olarak önizlemenin altında */}
           <div className="w-full mt-4 rounded-lg border border-neutral-700 overflow-hidden">
             <table className="w-full text-sm">
               <thead>
@@ -574,7 +587,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* SAĞ: Ürün kaydırıcısı */}
         <div className="w-64 shrink-0">
           <h2 className="text-lg mb-4">Ürün Kaydırıcı</h2>
 
@@ -612,12 +624,13 @@ export default function Home() {
                                     key={v}
                                     label={v}
                                     active={isActive}
-                                    onClick={() =>
+                                    onClick={() => {
                                       setSelections((prev) => ({
                                         ...prev,
                                         [cat.key]: { series: s.name, variant: v },
-                                      }))
-                                    }
+                                      }));
+                                      kullanimKaydet(cat.key, s.name, v);
+                                    }}
                                   />
                                 );
                               })}

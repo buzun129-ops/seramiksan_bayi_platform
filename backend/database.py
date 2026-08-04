@@ -11,3 +11,4 @@ client = AsyncIOMotorClient(MONGO_URI)
 database = client[DATABASE_NAME]
 
 bayiler_collection = database["bayiler"]
+kullanim_kayitlari_collection = database["kullanim_kayitlari"]
