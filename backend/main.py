@@ -1,8 +1,11 @@
-from fastapi import FastAPI, HTTPException
+import os
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
+from jose import jwt, JWTError
 from database import database, bayiler_collection
 from models import BayiCreate, BayiLogin, BayiOut
-from auth import sifre_hashle, sifre_dogrula, token_olustur
+from auth import sifre_hashle, sifre_dogrula, token_olustur, SECRET_KEY, ALGORITHM
 
 app = FastAPI(title="Seramiksan Bayi Platformu API")
 
@@ -13,6 +16,24 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+bearer_scheme = HTTPBearer()
+
+async def su_anki_bayiyi_getir(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)):
+    token = credentials.credentials
+    hata = HTTPException(status_code=401, detail="Geçersiz veya süresi dolmuş token.")
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get("sub")
+        if email is None:
+            raise hata
+    except JWTError:
+        raise hata
+
+    bayi = await bayiler_collection.find_one({"email": email})
+    if bayi is None:
+        raise hata
+    return bayi
 
 @app.get("/")
 def read_root():
@@ -50,3 +71,12 @@ async def login(bilgiler: BayiLogin):
 
     token = token_olustur({"sub": bayi["email"], "rol": bayi["rol"]})
     return {"access_token": token, "token_type": "bearer"}
+
+@app.get("/me", response_model=BayiOut)
+async def me(su_anki_bayi: dict = Depends(su_anki_bayiyi_getir)):
+    return BayiOut(
+        email=su_anki_bayi["email"],
+        bayi_adi=su_anki_bayi["bayi_adi"],
+        sehir=su_anki_bayi.get("sehir"),
+        rol=su_anki_bayi["rol"],
+    )
