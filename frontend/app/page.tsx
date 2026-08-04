@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 function buildRoomImages(prefix: string, count: number): string[] {
   return Array.from({ length: count }, (_, i) => `/rooms/${prefix}-${i + 1}.jpg`);
@@ -52,13 +53,12 @@ const tileImages: Record<string, string> = {
   "Zeus Hexagonel Silver Motif": "/tiles/zeus-hexagonel-silver-motif.jpg",
   "Zeus Bordür Koyu Gri Motif": "/tiles/zeus-bordur-koyu-gri-motif.jpg",
   "Zeus Bordür Silver Motif": "/tiles/zeus-bordur-silver-motif.jpg",
-  // Vitrifiye — Klozet
-  "Alttan Çikiş": "/tiles/natura-alttan-cikis.jpg",
-  "Alttan Çikiş Kutulu": "/tiles/natura-alttan-cikis-kutulu.jpg",
-  "Alttan Çikiş Taharet Deliksiz": "/tiles/natura-alttan-cikis-taharet-deliksiz.jpg",
-  "Arkadan Çikiş": "/tiles/natura-arkadan-cikis.jpg",
-  "Arkadan Çikiş Kutulu": "/tiles/natura-arkadan-cikis-kutulu.jpg",
-  "Arkadan Çikiş Taharet Deliksiz": "/tiles/natura-arkadan-cikis-taharet-deliksiz.jpg",
+  "Alttan Çıkış": "/tiles/natura-alttan-cikis.jpg",
+  "Alttan Çıkış Kutulu": "/tiles/natura-alttan-cikis-kutulu.jpg",
+  "Alttan Çıkış Taharet Deliksiz": "/tiles/natura-alttan-cikis-taharet-deliksiz.jpg",
+  "Arkadan Çıkış": "/tiles/natura-arkadan-cikis.jpg",
+  "Arkadan Çıkış Kutulu": "/tiles/natura-arkadan-cikis-kutulu.jpg",
+  "Arkadan Çıkış Taharet Deliksiz": "/tiles/natura-arkadan-cikis-taharet-deliksiz.jpg",
   "Bedensel Engelli Klozet": "/tiles/natura-bedensel-engelli-klozet.jpg",
   "Bedensel Engelli Klozet Taharet Deliksiz": "/tiles/natura-bedensel-engelli-klozet-taharet-deliksiz.jpg",
   "Plus Asma Klozet": "/tiles/natura-plus-asma-klozet.jpg",
@@ -77,7 +77,6 @@ const tileImages: Record<string, string> = {
   "Rim-Out Asma Klozet": "/tiles/volcano-rim-out-asma-klozet.jpg",
   "Tek Parça Klozet": "/tiles/volcano-tek-parca-klozet.jpg",
   "Tek Parça Klozet Batarya Delikli": "/tiles/volcano-tek-parca-klozet-batarya-delikli.jpg",
-  // Vitrifiye — Lavabo
   "Bedensel Engelli Lavabosu": "/tiles/natura-bedensel-engelli-lavabosu.jpg",
   "Lavabo 50 cm": "/tiles/natura-lavabo-50cm.jpg",
   "Lavabo 50 cm Kutulu": "/tiles/natura-lavabo-50cm-kutulu.jpg",
@@ -164,14 +163,13 @@ function colorFor(variant: string): string {
 type Series = { name: string; variants: string[] };
 type Category = { key: string; title: string; seriesList: Series[] };
 
-// Duvar Karoları — Angel, Crystal, Artemis (gerçek renkler, gerçek fotoğraflar)
 const wallTileSeries: Series[] = [
   {
     name: "Angel",
     variants: [
-      "Gri", "Açik Gri", "Kemik", "Vizon",
-      "Rölyef Açik Gri", "Rölyef Kemik",
-      "Gri Sugar", "Açik Gri Sugar", "Kemik Sugar", "Vizon Sugar",
+      "Gri", "Açık Gri", "Kemik", "Vizon",
+      "Rölyef Açık Gri", "Rölyef Kemik",
+      "Gri Sugar", "Açık Gri Sugar", "Kemik Sugar", "Vizon Sugar",
     ],
   },
   {
@@ -185,7 +183,6 @@ const wallTileSeries: Series[] = [
   { name: "Artemis", variants: ["Artemis Beyaz", "Artemis Rölyef Beyaz", "Artemis Beyaz Sugar"] },
 ];
 
-// Zemin Karoları — Bali, Etna, Zeus (gerçek renkler, gerçek fotoğraflar)
 const floorTileSeries: Series[] = [
   { name: "Bali", variants: ["Bali Gri", "Bali Kemik", "Bali Beyaz", "Bali Leaf Motif", "Bali Rölyef"] },
   { name: "Etna", variants: ["Etna Kemik Sugar", "Etna Gri Sugar", "Etna Antrasit Sugar"] },
@@ -199,17 +196,16 @@ const floorTileSeries: Series[] = [
   },
 ];
 
-// Vitrifiye — Klozet — Natura, Terra, Volcano (seramiksan.com.tr'den gerçek ürün adları)
 const klozetSeries: Series[] = [
   {
     name: "Natura",
     variants: [
-      "Alttan Çikiş",
-      "Alttan Çikiş Kutulu",
-      "Alttan Çikiş Taharet Deliksiz",
-      "Arkadan Çikiş",
-      "Arkadan Çikiş Kutulu",
-      "Arkadan Çikiş Taharet Deliksiz",
+      "Alttan Çıkış",
+      "Alttan Çıkış Kutulu",
+      "Alttan Çıkış Taharet Deliksiz",
+      "Arkadan Çıkış",
+      "Arkadan Çıkış Kutulu",
+      "Arkadan Çıkış Taharet Deliksiz",
       "Bedensel Engelli Klozet",
       "Bedensel Engelli Klozet Taharet Deliksiz",
       "Plus Asma Klozet",
@@ -243,7 +239,6 @@ const klozetSeries: Series[] = [
   },
 ];
 
-// Vitrifiye — El Yıkama (Lavabo) — henüz gerçek veri eklenmedi (yer tutucu)
 const lavaboSeries: Series[] = [
   {
     name: "Natura",
@@ -252,7 +247,7 @@ const lavaboSeries: Series[] = [
       "Lavabo 50 cm",
       "Lavabo 50 cm Kutulu",
       "Tam Ayak Kutusuz",
-      "Yarim Ayak Kutusuz",
+      "Yarım Ayak Kutusuz",
     ],
   },
   {
@@ -297,6 +292,7 @@ const lavaboSeries: Series[] = [
     ],
   },
 ];
+
 const productCategories: Category[] = [
   { key: "wall", title: "Duvar Karosu", seriesList: wallTileSeries },
   { key: "floor", title: "Zemin Karosu", seriesList: floorTileSeries },
@@ -317,6 +313,39 @@ function Chevron({ open }: { open: boolean }) {
 }
 
 export default function Home() {
+  const router = useRouter();
+  const [bayiAdi, setBayiAdi] = useState<string | null>(null);
+  const [kontrolEdiliyor, setKontrolEdiliyor] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      router.push("/giris");
+      return;
+    }
+
+    fetch("http://127.0.0.1:8000/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Geçersiz oturum");
+        return res.json();
+      })
+      .then((veri) => {
+        setBayiAdi(veri.bayi_adi);
+        setKontrolEdiliyor(false);
+      })
+      .catch(() => {
+        localStorage.removeItem("access_token");
+        router.push("/giris");
+      });
+  }, [router]);
+
+  const cikisYap = () => {
+    localStorage.removeItem("access_token");
+    router.push("/giris");
+  };
+
   const [openRoomCategories, setOpenRoomCategories] = useState<Record<string, boolean>>({});
   const [selectedRoomImage, setSelectedRoomImage] = useState<string>(roomCategories[0].images[0]);
   const [selectedRoomTitle, setSelectedRoomTitle] = useState<string>(roomCategories[0].title);
@@ -399,9 +428,30 @@ export default function Home() {
     );
   };
 
+  if (kontrolEdiliyor) {
+    return (
+      <main className="min-h-screen bg-neutral-900 text-white flex items-center justify-center">
+        <p className="text-neutral-400">Yükleniyor...</p>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-neutral-900 text-white p-8">
-      <h1 className="text-2xl font-bold mb-6">Seramiksan Bayi Ürün Deneme Platformu</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Seramiksan Bayi Ürün Deneme Platformu</h1>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-neutral-400">
+            Hoş geldin, <span className="text-white font-medium">{bayiAdi}</span>
+          </span>
+          <button
+            onClick={cikisYap}
+            className="text-sm px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 transition"
+          >
+            Çıkış Yap
+          </button>
+        </div>
+      </div>
 
       <div className="flex gap-6">
         {/* SOL: Banyo sahnesi seçimi + gerçek görsel önizleme */}
