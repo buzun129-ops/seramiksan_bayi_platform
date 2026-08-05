@@ -36,6 +36,11 @@ async def su_anki_bayiyi_getir(credentials: HTTPAuthorizationCredentials = Depen
         raise hata
     return bayi
 
+async def admin_kontrolu(su_anki_bayi: dict = Depends(su_anki_bayiyi_getir)):
+    if su_anki_bayi.get("rol") != "admin":
+        raise HTTPException(status_code=403, detail="Bu işlem için admin yetkisi gerekiyor.")
+    return su_anki_bayi
+
 @app.get("/")
 def read_root():
     return {"mesaj": "Seramiksan Bayi Platformu API çalışıyor"}
@@ -97,3 +102,41 @@ async def kullanim_kaydi_ekle(
     }
     await kullanim_kayitlari_collection.insert_one(yeni_kayit)
     return {"durum": "kaydedildi"}
+
+@app.get("/admin/ozet")
+async def admin_ozet(admin: dict = Depends(admin_kontrolu)):
+    toplam_bayi = await bayiler_collection.count_documents({"rol": "bayi"})
+    toplam_kayit = await kullanim_kayitlari_collection.count_documents({})
+
+    en_populer_pipeline = [
+        {"$group": {"_id": {"kategori": "$kategori", "seri": "$seri", "varyant": "$varyant"}, "sayi": {"$sum": 1}}},
+        {"$sort": {"sayi": -1}},
+        {"$limit": 5},
+    ]
+    en_populer_cursor = kullanim_kayitlari_collection.aggregate(en_populer_pipeline)
+    en_populer = [
+        {
+            "kategori": doc["_id"]["kategori"],
+            "seri": doc["_id"]["seri"],
+            "varyant": doc["_id"]["varyant"],
+            "sayi": doc["sayi"],
+        }
+        async for doc in en_populer_cursor
+    ]
+
+    bayi_bazli_pipeline = [
+        {"$group": {"_id": "$bayi_adi", "sayi": {"$sum": 1}}},
+        {"$sort": {"sayi": -1}},
+    ]
+    bayi_bazli_cursor = kullanim_kayitlari_collection.aggregate(bayi_bazli_pipeline)
+    bayi_bazli = [
+        {"bayi_adi": doc["_id"], "sayi": doc["sayi"]}
+        async for doc in bayi_bazli_cursor
+    ]
+
+    return {
+        "toplam_bayi": toplam_bayi,
+        "toplam_kayit": toplam_kayit,
+        "en_populer_urunler": en_populer,
+        "bayi_bazli_kullanim": bayi_bazli,
+    }

@@ -157,7 +157,6 @@ const placeholderColors: Record<string, string> = {
 function colorFor(variant: string): string {
   return placeholderColors[variant] ?? "#9CA3AF";
 }
-
 type Series = { name: string; variants: string[] };
 type Category = { key: string; title: string; seriesList: Series[] };
 
@@ -309,10 +308,10 @@ function Chevron({ open }: { open: boolean }) {
     </svg>
   );
 }
-
 export default function Home() {
   const router = useRouter();
   const [bayiAdi, setBayiAdi] = useState<string | null>(null);
+  const [rol, setRol] = useState<string | null>(null);
   const [kontrolEdiliyor, setKontrolEdiliyor] = useState(true);
 
   useEffect(() => {
@@ -331,6 +330,7 @@ export default function Home() {
       })
       .then((veri) => {
         setBayiAdi(veri.bayi_adi);
+        setRol(veri.rol);
         setKontrolEdiliyor(false);
       })
       .catch(() => {
@@ -460,6 +460,14 @@ export default function Home() {
           <span className="text-sm text-neutral-400">
             Hoş geldin, <span className="text-white font-medium">{bayiAdi}</span>
           </span>
+          {rol === "admin" ? (
+            <a
+              href="/admin"
+              className="text-sm px-3 py-1.5 rounded-lg bg-teal-700 hover:bg-teal-600 transition"
+            >
+              Admin Paneli
+            </a>
+          ) : null}
           <button
             onClick={cikisYap}
             className="text-sm px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 transition"
