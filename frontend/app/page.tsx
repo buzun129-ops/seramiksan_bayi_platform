@@ -20,13 +20,13 @@ const roomCategories = [
 
 const tileImages: Record<string, string> = {
   "Gri": "/tiles/angel-gri.jpg",
-  "Açık Gri": "/tiles/angel-acik-gri.jpg",
+  "Açik Gri": "/tiles/angel-acik-gri.jpg",
   "Kemik": "/tiles/angel-kemik.jpg",
   "Vizon": "/tiles/angel-vizon.jpg",
-  "Rölyef Açık Gri": "/tiles/angel-rolyef-acik-gri.jpg",
+  "Rölyef Açik Gri": "/tiles/angel-rolyef-acik-gri.jpg",
   "Rölyef Kemik": "/tiles/angel-rolyef-kemik.jpg",
   "Gri Sugar": "/tiles/angel-gri-sugar.jpg",
-  "Açık Gri Sugar": "/tiles/angel-acik-gri-sugar.jpg",
+  "Açik Gri Sugar": "/tiles/angel-acik-gri-sugar.jpg",
   "Kemik Sugar": "/tiles/angel-kemik-sugar.jpg",
   "Vizon Sugar": "/tiles/angel-vizon-sugar.jpg",
   "Crystal Beyaz": "/tiles/crystal-beyaz.jpg",
@@ -52,12 +52,12 @@ const tileImages: Record<string, string> = {
   "Zeus Hexagonel Silver Motif": "/tiles/zeus-hexagonel-silver-motif.jpg",
   "Zeus Bordür Koyu Gri Motif": "/tiles/zeus-bordur-koyu-gri-motif.jpg",
   "Zeus Bordür Silver Motif": "/tiles/zeus-bordur-silver-motif.jpg",
-  "Alttan Çıkış": "/tiles/natura-alttan-cikis.jpg",
-  "Alttan Çıkış Kutulu": "/tiles/natura-alttan-cikis-kutulu.jpg",
-  "Alttan Çıkış Taharet Deliksiz": "/tiles/natura-alttan-cikis-taharet-deliksiz.jpg",
-  "Arkadan Çıkış": "/tiles/natura-arkadan-cikis.jpg",
-  "Arkadan Çıkış Kutulu": "/tiles/natura-arkadan-cikis-kutulu.jpg",
-  "Arkadan Çıkış Taharet Deliksiz": "/tiles/natura-arkadan-cikis-taharet-deliksiz.jpg",
+  "Alttan Çikiş": "/tiles/natura-alttan-cikis.jpg",
+  "Alttan Çikiş Kutulu": "/tiles/natura-alttan-cikis-kutulu.jpg",
+  "Alttan Çikiş Taharet Deliksiz": "/tiles/natura-alttan-cikis-taharet-deliksiz.jpg",
+  "Arkadan Çikiş": "/tiles/natura-arkadan-cikis.jpg",
+  "Arkadan Çikiş Kutulu": "/tiles/natura-arkadan-cikis-kutulu.jpg",
+  "Arkadan Çikiş Taharet Deliksiz": "/tiles/natura-arkadan-cikis-taharet-deliksiz.jpg",
   "Bedensel Engelli Klozet": "/tiles/natura-bedensel-engelli-klozet.jpg",
   "Bedensel Engelli Klozet Taharet Deliksiz": "/tiles/natura-bedensel-engelli-klozet-taharet-deliksiz.jpg",
   "Plus Asma Klozet": "/tiles/natura-plus-asma-klozet.jpg",
@@ -65,6 +65,7 @@ const tileImages: Record<string, string> = {
   "Asma Klozet": "/tiles/terra-asma-klozet.jpg",
   "Asma Klozet Taharet Deliksiz": "/tiles/terra-asma-klozet-taharet-deliksiz.jpg",
   "DTD Klozet": "/tiles/terra-dtd-klozet.jpg",
+  "DTD Klozet (Volcano)": "/tiles/volcano-dtd-klozet.jpg",
   "DTD Klozet Antrasit": "/tiles/terra-dtd-klozet-antrasit.jpg",
   "DTD Klozet Antrasit Taharet Deliksiz": "/tiles/terra-dtd-klozet-antrasit-taharet-deliksiz.jpg",
   "DTD Klozet Taharet Deliksiz": "/tiles/terra-dtd-klozet-taharet-deliksiz.jpg",
@@ -80,7 +81,7 @@ const tileImages: Record<string, string> = {
   "Lavabo 50 cm": "/tiles/natura-lavabo-50cm.jpg",
   "Lavabo 50 cm Kutulu": "/tiles/natura-lavabo-50cm-kutulu.jpg",
   "Tam Ayak Kutusuz": "/tiles/natura-tam-ayak-kutusuz.jpg",
-  "Yarım Ayak Kutusuz": "/tiles/natura-yarim-ayak-kutusuz.jpg",
+  "Yarim Ayak Kutusuz": "/tiles/natura-yarim-ayak-kutusuz.jpg",
   "Etajerli Lavabo 60 cm": "/tiles/saturn-etajerli-lavabo-60cm.jpg",
   "Etajerli Lavabo 80 cm": "/tiles/saturn-etajerli-lavabo-80cm.jpg",
   "Etajerli Lavabo 100 cm": "/tiles/saturn-etajerli-lavabo-100cm.jpg",
@@ -134,13 +135,13 @@ const placeholderColors: Record<string, string> = {
   "Zeus Bordür Koyu Gri Motif": "#52525B",
   "Zeus Bordür Silver Motif": "#C6C9CC",
   "Gri": "#A0A0A0",
-  "Açık Gri": "#BDBDBD",
+  "Açik Gri": "#BDBDBD",
   "Kemik": "#D9CFC0",
   "Vizon": "#B9A98F",
-  "Rölyef Açık Gri": "#BDBDBD",
+  "Rölyef Açik Gri": "#BDBDBD",
   "Rölyef Kemik": "#D9CFC0",
   "Gri Sugar": "#A0A0A0",
-  "Açık Gri Sugar": "#BDBDBD",
+  "Açik Gri Sugar": "#BDBDBD",
   "Kemik Sugar": "#D9CFC0",
   "Vizon Sugar": "#B9A98F",
   "Crystal Beyaz": "#F1F0EE",
@@ -164,9 +165,9 @@ const wallTileSeries: Series[] = [
   {
     name: "Angel",
     variants: [
-      "Gri", "Açık Gri", "Kemik", "Vizon",
-      "Rölyef Açık Gri", "Rölyef Kemik",
-      "Gri Sugar", "Açık Gri Sugar", "Kemik Sugar", "Vizon Sugar",
+      "Gri", "Açik Gri", "Kemik", "Vizon",
+      "Rölyef Açik Gri", "Rölyef Kemik",
+      "Gri Sugar", "Açik Gri Sugar", "Kemik Sugar", "Vizon Sugar",
     ],
   },
   {
@@ -197,12 +198,12 @@ const klozetSeries: Series[] = [
   {
     name: "Natura",
     variants: [
-      "Alttan Çıkış",
-      "Alttan Çıkış Kutulu",
-      "Alttan Çıkış Taharet Deliksiz",
-      "Arkadan Çıkış",
-      "Arkadan Çıkış Kutulu",
-      "Arkadan Çıkış Taharet Deliksiz",
+      "Alttan Çikiş",
+      "Alttan Çikiş Kutulu",
+      "Alttan Çikiş Taharet Deliksiz",
+      "Arkadan Çikiş",
+      "Arkadan Çikiş Kutulu",
+      "Arkadan Çikiş Taharet Deliksiz",
       "Bedensel Engelli Klozet",
       "Bedensel Engelli Klozet Taharet Deliksiz",
       "Plus Asma Klozet",
@@ -227,7 +228,7 @@ const klozetSeries: Series[] = [
   {
     name: "Volcano",
     variants: [
-      "DTD Klozet",
+      "DTD Klozet (Volcano)",
       "DTD Klozet Batarya Deliksiz",
       "Rim-Out Asma Klozet",
       "Tek Parça Klozet",
@@ -244,7 +245,7 @@ const lavaboSeries: Series[] = [
       "Lavabo 50 cm",
       "Lavabo 50 cm Kutulu",
       "Tam Ayak Kutusuz",
-      "Yarım Ayak Kutusuz",
+      "Yarim Ayak Kutusuz",
     ],
   },
   {
@@ -472,7 +473,7 @@ export default function Home() {
             onClick={cikisYap}
             className="text-sm px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 transition"
           >
-            Çıkış Yap
+            Çikis Yap
           </button>
         </div>
       </div>
@@ -596,7 +597,7 @@ export default function Home() {
         </div>
 
         <div className="w-64 shrink-0">
-          <h2 className="text-lg mb-4">Ürün Kaydırıcı</h2>
+          <h2 className="text-lg mb-4">Ürün Kaydirici</h2>
 
           <div className="flex flex-col gap-2">
             {productCategories.map((cat) => {
