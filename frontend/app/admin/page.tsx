@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 type PopulerUrun = {
   kategori: string;
@@ -13,6 +14,7 @@ type PopulerUrun = {
 type BayiKullanim = {
   bayi_adi: string;
   sayi: number;
+  yuzde: number;
 };
 
 type AdminOzet = {
@@ -28,6 +30,12 @@ const kategoriEtiket: Record<string, string> = {
   klozet: "Vitrifiye — Klozet",
   lavabo: "Vitrifiye — Lavabo",
 };
+
+const DILIM_RENKLERI = [
+  "#14b8a6", "#6366f1", "#f59e0b", "#ef4444",
+  "#3b82f6", "#a855f7", "#22c55e", "#ec4899",
+  "#eab308", "#06b6d4",
+];
 
 export default function AdminSayfasi() {
   const router = useRouter();
@@ -85,6 +93,15 @@ export default function AdminSayfasi() {
 
   if (!ozet) return null;
 
+  const pastaVerisi = ozet.bayi_bazli_kullanim.map((bayi) => ({
+    name: bayi.bayi_adi,
+    value: bayi.sayi,
+    yuzde: bayi.yuzde,
+  }));
+
+ const ozelEtiket = (props: { name?: string; yuzde?: number }) =>
+    `${props.name} %${props.yuzde}`;
+
   return (
     <main className="min-h-screen bg-neutral-900 text-white p-8">
       <div className="flex items-center justify-between mb-8">
@@ -105,7 +122,7 @@ export default function AdminSayfasi() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6 max-w-4xl">
+      <div className="grid grid-cols-3 gap-6 max-w-7xl">
         <div>
           <h2 className="text-lg mb-3">En Çok İncelenen Ürünler</h2>
           <div className="rounded-lg border border-neutral-700 overflow-hidden">
@@ -161,12 +178,54 @@ export default function AdminSayfasi() {
                 )}
                 {ozet.bayi_bazli_kullanim.map((bayi, i) => (
                   <tr key={i} className={i % 2 === 0 ? "bg-neutral-900" : "bg-neutral-800/50"}>
-                    <td className="px-4 py-2">{bayi.bayi_adi}</td>
-                    <td className="px-4 py-2 text-right font-medium">{bayi.sayi}</td>
+                    <td className="px-4 py-2 flex items-center gap-2">
+                      <span
+                        className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
+                        style={{ backgroundColor: DILIM_RENKLERI[i % DILIM_RENKLERI.length] }}
+                      />
+                      {bayi.bayi_adi}
+                    </td>
+                    <td className="px-4 py-2 text-right font-medium">
+                      {bayi.sayi} <span className="text-neutral-500">(%{bayi.yuzde})</span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-lg mb-3">Bayi Kullanım Oranı</h2>
+          <div className="rounded-lg border border-neutral-700 p-2 h-72">
+            {pastaVerisi.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart margin={{ top: 20, right: 10, bottom: 20, left: 10 }}>
+                  <Pie
+                    data={pastaVerisi}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={65}
+                    label={ozelEtiket}
+                    labelLine
+                  >
+                    {pastaVerisi.map((_, i) => (
+                      <Cell key={i} fill={DILIM_RENKLERI[i % DILIM_RENKLERI.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{ backgroundColor: "#262626", border: "1px solid #404040", borderRadius: 8 }}
+                    labelStyle={{ color: "#fff" }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-neutral-500 text-sm">
+                Henüz veri yok
+              </div>
+            )}
           </div>
         </div>
       </div>

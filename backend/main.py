@@ -105,10 +105,18 @@ async def kullanim_kaydi_ekle(
 
 @app.get("/admin/ozet")
 async def admin_ozet(admin: dict = Depends(admin_kontrolu)):
+    # Admin rolündeki hesapların e-postalarını buluyoruz ki istatistiklere dahil etmeyelim
+    admin_emailleri = [
+        bayi["email"] async for bayi in bayiler_collection.find({"rol": "admin"}, {"email": 1})
+    ]
+
     toplam_bayi = await bayiler_collection.count_documents({"rol": "bayi"})
-    toplam_kayit = await kullanim_kayitlari_collection.count_documents({})
+    toplam_kayit = await kullanim_kayitlari_collection.count_documents(
+        {"bayi_email": {"$nin": admin_emailleri}}
+    )
 
     en_populer_pipeline = [
+        {"$match": {"bayi_email": {"$nin": admin_emailleri}}},
         {"$group": {"_id": {"kategori": "$kategori", "seri": "$seri", "varyant": "$varyant"}, "sayi": {"$sum": 1}}},
         {"$sort": {"sayi": -1}},
         {"$limit": 5},
@@ -125,13 +133,23 @@ async def admin_ozet(admin: dict = Depends(admin_kontrolu)):
     ]
 
     bayi_bazli_pipeline = [
+        {"$match": {"bayi_email": {"$nin": admin_emailleri}}},
         {"$group": {"_id": "$bayi_adi", "sayi": {"$sum": 1}}},
         {"$sort": {"sayi": -1}},
     ]
     bayi_bazli_cursor = kullanim_kayitlari_collection.aggregate(bayi_bazli_pipeline)
-    bayi_bazli = [
+    bayi_bazli_raw = [
         {"bayi_adi": doc["_id"], "sayi": doc["sayi"]}
         async for doc in bayi_bazli_cursor
+    ]
+
+    # Her bayinin toplam içindeki yüzdesini hesaplıyoruz (donut grafik için)
+    bayi_bazli = [
+        {
+            **bayi,
+            "yuzde": round((bayi["sayi"] / toplam_kayit) * 100, 1) if toplam_kayit > 0 else 0,
+        }
+        for bayi in bayi_bazli_raw
     ]
 
     return {
