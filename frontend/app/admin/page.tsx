@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid,
+} from "recharts";
 
 type PopulerUrun = {
   kategori: string;
@@ -17,9 +20,17 @@ type BayiKullanim = {
   yuzde: number;
 };
 
+type HaftalikKullanim = {
+  tarih: string;
+  sayi: number;
+};
+
 type AdminOzet = {
   toplam_bayi: number;
   toplam_kayit: number;
+  aktif_bayi_orani: number;
+  ortalama_urun_goruntuleme: number;
+  haftalik_kullanim: HaftalikKullanim[];
   en_populer_urunler: PopulerUrun[];
   bayi_bazli_kullanim: BayiKullanim[];
 };
@@ -111,7 +122,8 @@ export default function AdminSayfasi() {
         </a>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 max-w-xl">
+      {/* KPI kartları — 4 gösterge */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 max-w-5xl">
         <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4">
           <p className="text-sm text-neutral-400">Toplam Bayi</p>
           <p className="text-3xl font-bold mt-1">{ozet.toplam_bayi}</p>
@@ -119,6 +131,39 @@ export default function AdminSayfasi() {
         <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4">
           <p className="text-sm text-neutral-400">Toplam İnceleme Kaydı</p>
           <p className="text-3xl font-bold mt-1">{ozet.toplam_kayit}</p>
+        </div>
+        <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4">
+          <p className="text-sm text-neutral-400">Aktif Bayi Oranı</p>
+          <p className="text-3xl font-bold mt-1">%{ozet.aktif_bayi_orani}</p>
+        </div>
+        <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4">
+          <p className="text-sm text-neutral-400">Ortalama Ürün Görüntüleme</p>
+          <p className="text-3xl font-bold mt-1">{ozet.ortalama_urun_goruntuleme}</p>
+        </div>
+      </div>
+
+      {/* Haftalık Kullanım Grafiği */}
+      <div className="mb-8 max-w-7xl">
+        <h2 className="text-lg mb-3">Haftalık Kullanım (Son 7 Gün)</h2>
+        <div className="rounded-lg border border-neutral-700 p-4 h-64">
+          {ozet.haftalik_kullanim.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={ozet.haftalik_kullanim}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#404040" />
+                <XAxis dataKey="tarih" stroke="#a3a3a3" fontSize={12} />
+                <YAxis stroke="#a3a3a3" fontSize={12} allowDecimals={false} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: "#262626", border: "1px solid #404040", borderRadius: 8 }}
+                  labelStyle={{ color: "#fff" }}
+                />
+                <Bar dataKey="sayi" fill="#14b8a6" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-full flex items-center justify-center text-neutral-500 text-sm">
+              Son 7 günde kayıt yok
+            </div>
+          )}
         </div>
       </div>
 

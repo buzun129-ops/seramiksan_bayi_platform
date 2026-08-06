@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
@@ -105,7 +105,6 @@ async def kullanim_kaydi_ekle(
 
 @app.get("/admin/ozet")
 async def admin_ozet(admin: dict = Depends(admin_kontrolu)):
-    # Admin rolündeki hesapların e-postalarını buluyoruz ki istatistiklere dahil etmeyelim
     admin_emailleri = [
         bayi["email"] async for bayi in bayiler_collection.find({"rol": "admin"}, {"email": 1})
     ]
@@ -143,7 +142,6 @@ async def admin_ozet(admin: dict = Depends(admin_kontrolu)):
         async for doc in bayi_bazli_cursor
     ]
 
-    # Her bayinin toplam içindeki yüzdesini hesaplıyoruz (donut grafik için)
     bayi_bazli = [
         {
             **bayi,
@@ -152,9 +150,35 @@ async def admin_ozet(admin: dict = Depends(admin_kontrolu)):
         for bayi in bayi_bazli_raw
     ]
 
+    # --- YENİ: Aktif Bayi Oranı ---
+    aktif_bayi_emailleri = await kullanim_kayitlari_collection.distinct(
+        "bayi_email", {"bayi_email": {"$nin": admin_emailleri}}
+    )
+    aktif_bayi_sayisi = len(aktif_bayi_emailleri)
+    aktif_bayi_orani = round((aktif_bayi_sayisi / toplam_bayi) * 100, 1) if toplam_bayi > 0 else 0
+
+    # --- YENİ: Ortalama Ürün Görüntüleme (bayi başına) ---
+    ortalama_urun_goruntuleme = round(toplam_kayit / toplam_bayi, 1) if toplam_bayi > 0 else 0
+
+    # --- YENİ: Haftalık Kullanım (son 7 gün, güne göre) ---
+    yedi_gun_once = datetime.utcnow() - timedelta(days=7)
+    haftalik_pipeline = [
+        {"$match": {"bayi_email": {"$nin": admin_emailleri}, "tarih": {"$gte": yedi_gun_once}}},
+        {"$group": {"_id": {"$dateToString": {"format": "%Y-%m-%d", "date": "$tarih"}}, "sayi": {"$sum": 1}}},
+        {"$sort": {"_id": 1}},
+    ]
+    haftalik_cursor = kullanim_kayitlari_collection.aggregate(haftalik_pipeline)
+    haftalik_kullanim = [
+        {"tarih": doc["_id"], "sayi": doc["sayi"]}
+        async for doc in haftalik_cursor
+    ]
+
     return {
         "toplam_bayi": toplam_bayi,
         "toplam_kayit": toplam_kayit,
+        "aktif_bayi_orani": aktif_bayi_orani,
+        "ortalama_urun_goruntuleme": ortalama_urun_goruntuleme,
+        "haftalik_kullanim": haftalik_kullanim,
         "en_populer_urunler": en_populer,
         "bayi_bazli_kullanim": bayi_bazli,
     }
