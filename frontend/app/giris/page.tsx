@@ -29,10 +29,8 @@ export default function GirisSayfasi() {
       }
 
       const veri = await res.json();
-      // Token'ı tarayıcıda saklıyoruz (bir sonraki istekte kullanmak için)
       localStorage.setItem("access_token", veri.access_token);
 
-      // Giriş başarılı, ana sayfaya yönlendir
       router.push("/");
     } catch (err) {
       if (err instanceof Error) {
@@ -46,7 +44,7 @@ export default function GirisSayfasi() {
   };
 
   return (
-    <main className="min-h-screen bg-neutral-900 text-white flex items-center justify-center p-8">
+    <main className="min-h-screen bg-neutral-900 text-white flex items-center justify-center p-4 sm:p-8">
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-bold mb-2 text-center">Bayi Girişi</h1>
         <p className="text-neutral-400 text-sm mb-6 text-center">
@@ -62,6 +60,7 @@ export default function GirisSayfasi() {
             <input
               type="email"
               required
+              autoComplete="off"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 rounded-lg bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -74,6 +73,7 @@ export default function GirisSayfasi() {
             <input
               type="password"
               required
+              autoComplete="off"
               value={sifre}
               onChange={(e) => setSifre(e.target.value)}
               className="w-full px-3 py-2 rounded-lg bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"

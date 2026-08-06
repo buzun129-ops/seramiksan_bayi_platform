@@ -99,19 +99,19 @@ export default function AdminSayfasi() {
     yuzde: bayi.yuzde,
   }));
 
- const ozelEtiket = (props: { name?: string; yuzde?: number }) =>
+  const ozelEtiket = (props: { name?: string; yuzde?: number }) =>
     `${props.name} %${props.yuzde}`;
 
   return (
-    <main className="min-h-screen bg-neutral-900 text-white p-8">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">Admin Paneli</h1>
+    <main className="min-h-screen bg-neutral-900 text-white p-4 sm:p-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-8">
+        <h1 className="text-xl sm:text-2xl font-bold">Admin Paneli</h1>
         <a href="/" className="text-sm text-teal-400 hover:underline">
           ← Ana sayfaya dön
         </a>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-8 max-w-xl">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 max-w-xl">
         <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4">
           <p className="text-sm text-neutral-400">Toplam Bayi</p>
           <p className="text-3xl font-bold mt-1">{ozet.toplam_bayi}</p>
@@ -122,10 +122,10 @@ export default function AdminSayfasi() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-6 max-w-7xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-7xl">
         <div>
           <h2 className="text-lg mb-3">En Çok İncelenen Ürünler</h2>
-          <div className="rounded-lg border border-neutral-700 overflow-hidden">
+          <div className="rounded-lg border border-neutral-700 overflow-hidden overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-neutral-800 text-neutral-300">
@@ -160,7 +160,7 @@ export default function AdminSayfasi() {
 
         <div>
           <h2 className="text-lg mb-3">Bayi Bazlı Kullanım</h2>
-          <div className="rounded-lg border border-neutral-700 overflow-hidden">
+          <div className="rounded-lg border border-neutral-700 overflow-hidden overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-neutral-800 text-neutral-300">
